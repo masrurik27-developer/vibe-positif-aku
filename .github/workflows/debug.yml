@@ -8,19 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout kode
+        uses: actions/checkout@v4
+        with:
+          ref: main
       
-      - name: List semua file
+      - name: Lihat semua file
         run: ls -la
       
-      - name: Cek file gradlew
+      - name: Cari file gradlew
         run: |
           if [ -f "gradlew" ]; then
-            echo "✅ gradlew FOUND"
-            cat gradlew | head -5
+            echo "✅ gradlew ketemu!"
+            ls -la gradlew
           else
-            echo "❌ gradlew NOT FOUND"
-            exit 1
+            echo "❌ gradlew TIDAK ketemu di root"
+            echo "Mencari di seluruh folder..."
+            find . -name "gradlew"
           fi
       
       - name: Setup Java
@@ -29,12 +33,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      - name: Chmod gradlew
+      - name: Kasih izin gradlew
         run: chmod +x gradlew
       
-      - name: Build
+      - name: Build APK
         run: ./gradlew assembleDebug
       
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk      
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
