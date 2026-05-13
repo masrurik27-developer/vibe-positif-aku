@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Vibes Positif+</string>
+    <string name="default_notification_channel_id">vibes_channel</string>
+</resources>
