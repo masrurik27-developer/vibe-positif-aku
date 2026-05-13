@@ -1,4 +1,4 @@
-name: 🚀 Build APK Sederhana
+name: Debug Build
 
 on:
   workflow_dispatch:
@@ -8,22 +8,34 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 📥 Checkout kode
-        uses: actions/checkout@v4
-
-      - name: ☕ Setup Java 17
+      - uses: actions/checkout@v4
+      
+      - name: List semua file
+        run: ls -la
+      
+      - name: Cek file gradlew
+        run: |
+          if [ -f "gradlew" ]; then
+            echo "✅ gradlew FOUND"
+            cat gradlew | head -5
+          else
+            echo "❌ gradlew NOT FOUND"
+            exit 1
+          fi
+      
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: 🔑 Izinkan gradlew
+      
+      - name: Chmod gradlew
         run: chmod +x gradlew
-
-      - name: 🔨 Build Debug APK
-        run: ./gradlew assembleDebug --no-daemon
-
-      - name: 📤 Upload APK
+      
+      - name: Build
+        run: ./gradlew assembleDebug
+      
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
